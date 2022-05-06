@@ -1,0 +1,50 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HTML>
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+    <title>Questionnaire Form</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="./webcomponent/assets/lib/zone.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    
+    <script src="./webcomponent/runtime-es5.js"></script>
+    <script src="./webcomponent/polyfills-es5.js"></script>
+    <script src="./webcomponent/main-es5.js"></script>
+    <script src="./fhir/lformsFHIRAll.min.js"></script>
+    <script src="./fhir/R4/lformsFHIR.min.js"></script>
+    <link rel="stylesheet" href="./webcomponent/styles.css">
+
+  </head>
+
+  <body>
+    <div>
+        <div class="text-start" id="formContainer" style="min-height: 100px;"></div>
+    </div>
+
+
+
+    <script>
+            $.ajax({
+                type: "GET",
+                url: "http://185.11.167.36:8080/matchbox/fhir/Questionnaire/findrisc-questionnaire",
+                dataType: "json",
+                success: function(data) {
+                    fhirQ = data//.entry[0].resource;
+//                    qLocation = data.entry[0].fullUrl;
+//                    document.getElementById("questLocation").innerHTML = 'Questionnaire Location: <a  target="_blank" href=' + qLocation + '>' + qLocation + '</a>';
+                    // Add the form to the page
+                    LForms.Util.addFormToPage(fhirQ, 'formContainer');
+
+                    qrURL = fhirQ.extension.find(ext => ext.url = "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-targetStructureMap").valueCanonical;
+                    document.getElementById("mapUrl").innerHTML = 'Questionnaire URL: <a  target="_blank" href=' + qrURL + '>' + qrURL + '</a>';
+
+                },
+            });
+    </script>
+
+
+  </body>
+</html>
